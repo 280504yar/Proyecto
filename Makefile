@@ -1,18 +1,19 @@
 CC = gcc
 CFLAGS = -Wall -I$(INC)
+LDFLAGS = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11  # Flags para Raylib
 OBJ = $(SRC:.c=.o)
-TARGET = main
+TARGET = gato9x9  #nombre del archivo que se generara
 INC = include
 SRC =   # agregar aca el nombre de sus .c, formato: "src/nombre.c"
 
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	$(CC) $(OBJ) -o $(TARGET)
+	$(CC) $(OBJ) -o $(TARGET) $(LDFLAGS)
 
-src/%.o: src/%.c main.c $(INC)/*.h
+src/%.o: src/%.c $(wildcard $(INC)/*.h)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm main src/*.o main.o
-
+	rm -f $(TARGET) $(OBJ)
+.PHONY: all clean
