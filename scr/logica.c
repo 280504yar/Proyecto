@@ -2,7 +2,7 @@
 #include "visual.h" // Para Simbolo y Color
 #include <stdbool.h>
 
-// Mapeo entre SimboloJugador y Simbolo (visual.h)
+// Mapeo entre SimboloJugador y Simbolo
 static const Simbolo simbolos_visual[JUGADORES] = {
     SIM_X,       // JUGADOR_X
     SIM_CIRCULO, // JUGADOR_O
@@ -10,7 +10,7 @@ static const Simbolo simbolos_visual[JUGADORES] = {
     SIM_CUADRADO   // JUGADOR_CUADRADO
 };
 
-// Colores para cada jugador (compatibilidad con visual.c)
+// Colores para cada jugador
 static const Color colores_jugadores[JUGADORES] = {
     RED,    // JUGADOR_X
     BLUE,   // JUGADOR_O
@@ -18,7 +18,7 @@ static const Color colores_jugadores[JUGADORES] = {
     YELLOW  // JUGADOR_CUADRADO
 };
 
-// Inicializa el estado del juego
+// Iniciando el juego
 void iniciar_juego(EstadoJuego *estado) {
     // Limpiar tablero
     for (int i = 0; i < FILAS; i++) {
@@ -37,7 +37,7 @@ void manejar_jugada(EstadoJuego *estado, int fila, int columna) {
     // Validar posición
     if (fila < 0 || fila >= FILAS || columna < 0 || columna >= COLUMNAS) return;
     
-    // Solo permitir jugada si la celda está vacía y el juego no ha terminado
+    // Reglas para validar jugada (si el espacio esta vacio y el juego no esta terminado)
     if (estado->tablero[fila][columna] == VACIO && !estado->juego_terminado) {
         // Registrar jugada
         estado->tablero[fila][columna] = estado->jugador_actual;
@@ -63,7 +63,7 @@ bool hay_ganador(const EstadoJuego *estado, int fila, int columna) {
     const SimboloJugador actual = estado->tablero[fila][columna];
     int contador;
     
-    // Direcciones: horizontal, vertical, diagonal \, diagonal /
+    // Direcciones: horizontal, vertical, diagonal (izquierda a derecha), diagonal (derecha a izquierda)
     int direcciones[4][2] = {{0,1}, {1,0}, {1,1}, {1,-1}};
     
     for (int d = 0; d < 4; d++) {
@@ -91,7 +91,7 @@ bool hay_ganador(const EstadoJuego *estado, int fila, int columna) {
             } else break;
         }
         
-        // Si encontramos 3 en línea
+        // Condicion para verificar el ganador
         if (contador >= 3) return true;
     }
     
@@ -115,7 +115,7 @@ void siguiente_jugador(EstadoJuego *estado) {
     estado->jugador_actual = (estado->jugador_actual + 1) % JUGADORES;
 }
 
-// Función de compatibilidad para visual.c (convierte EstadoJuego a Jugador[])
+// Función de compatibilidad 
 void obtener_info_jugadores(const EstadoJuego *estado, Jugador jugadores[JUGADORES]) {
     for (int i = 0; i < JUGADORES; i++) {
         jugadores[i].simbolo = simbolos_visual[i];
