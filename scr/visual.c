@@ -38,9 +38,9 @@ void tablero() {
 	// Líneas verticales
 	for (int j = 0; j <= 9; j++) {
 		DrawLine(
-			POS_X + i * TAM_CELDA,
+			POS_X + j * TAM_CELDA,
 			POS_Y,
-			POS_X + i * TAM_CELDA,
+			POS_X + j * TAM_CELDA,
 			POS_Y + 9 * TAM_CELDA,
 			lineas
 		);
@@ -71,14 +71,14 @@ void dibujar_simbolo(int fila, int columna, Simbolo simbolo, Color color) {
 			break;
 		}
 		case SIM_CUADRADO: {
-			DrawRectangleLines(x + borde, y + borde, TAM_CELDA - 2 * margen, TAM_CELDA - 2 * margen, color);
+			DrawRectangleLines(x + borde, y + borde, TAM_CELDA - 2 * borde, TAM_CELDA - 2 * borde, color);
 			break;
 		}
 		case SIM_CIRCULO: {
-			DrawCircleLines(cen_x, cen_y, TAM_CELDA - 2 -margen, color);
+			DrawCircleLines(cen_x, cen_y, TAM_CELDA/2 -borde, color);
 			break;
 		}
-		case SIM_TRIANGULO; {
+		case SIM_TRIANGULO: {
 			// Vértices que forman el triángulo
 			Vector2 v1 = {cen_x, y + borde};
 			Vector2 v2 = {x + borde, y + TAM_CELDA - borde};
@@ -94,7 +94,7 @@ void dibujar_simbolo(int fila, int columna, Simbolo simbolo, Color color) {
 int temporizador() {
 
 	if (tiempo_restante > 0.0f) {
-		tiempo_reestante -= GetFrameTime();
+		tiempo_restante -= GetFrameTime();
 		if (tiempo_restante < 0.0f) {
 			tiempo_restante = 0.0f;
 		}
@@ -123,11 +123,13 @@ void victorias(const Jugador jugadores[], int cantidad_jugadores) {
 			 }
 			case SIM_CUADRADO: {
 				DrawRectangleLines(base_x, posicion_y, 30, 30, jugadores[i].color);
+				break;
 			}
 			case SIM_CIRCULO: {
 				DrawCircleLines(base_x + 15, posicion_y + 15, 15, jugadores[i].color);
+				break;
 			}
-			case SIM_TRIANGULO {
+			case SIM_TRIANGULO: {
 				Vector2 v1 = {base_x + 15, posicion_y};
 				Vector2 v2 = {base_x, posicion_y + 30};
 				Vector2 v3 = {base_x + 30, posicion_y + 30};
