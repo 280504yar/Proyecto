@@ -36,12 +36,12 @@ int main(void) {
                     manejar_jugada(&juego, fila, columna);
                 }
             }
-            
-            // Actualizar temporizador
+           // Actualizar temporizador
             if (temporizador() == 0) {
                 siguiente_jugador(&juego);
                 reiniciar_temp();
             }
+
         } else {
             // Mostrar mensaje de fin de juego
             const char* mensaje = juego.ganador != -1 ?
