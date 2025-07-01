@@ -30,6 +30,15 @@ void iniciar_juego(EstadoJuego *estado) {
     estado->jugador_actual = 0;
     estado->juego_terminado = false;
     estado->ganador = -1;
+
+// Inicializar contadores de victoria (solo en el primer inicio)
+    static bool primera_vez = true;
+    if (primera_vez) {
+        for (int i = 0; i < NUM_PLAYERS; i++) {
+            estado->victorias[i] = 0;
+        }
+        primera_vez = false;
+    }
 }
 
 // Maneja una jugada en la posición (fila, columna)
@@ -44,8 +53,9 @@ void manejar_jugada(EstadoJuego *estado, int fila, int columna) {
         
         // Verificar victoria
         if (hay_ganador(estado, fila, columna)) {
-            estado->juego_terminado = true;
+	    estado->juego_terminado = true;
             estado->ganador = estado->jugador_actual;
+            estado->victorias[estado->ganador]++; // Incrementar victorias del ganador
         } 
         // Verificar empate
         else if (hay_empate(estado)) {
@@ -114,12 +124,25 @@ bool hay_empate(const EstadoJuego *estado) {
 void siguiente_jugador(EstadoJuego *estado) {
     estado->jugador_actual = (estado->jugador_actual + 1) % NUM_PLAYERS;
 }
+//Nueva ronda
+void preparar_nueva_ronda(EstadoJuego *estado) {
+    // Limpiar el tablero
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        for (int j = 0; j < BOARD_SIZE; j++) {
+            estado->tablero[i][j] = VACIO;
+        }
+    }
+    
+    // Mantener el contador de victorias (ya está en la estructura Jugador)
+    estado->juego_terminado = false;
+    estado->ganador = -1;
+}
 
 // Función de compatibilidad 
 void obtener_info_jugadores(const EstadoJuego *estado, Jugador jugadores[NUM_PLAYERS]) {
     for (int i = 0; i < NUM_PLAYERS; i++) {
         jugadores[i].simbolo = simbolos_visual[i];
         jugadores[i].color = colores_jugadores[i];
-        jugadores[i].victorias = (estado->ganador == i) ? 1 : 0;
+        jugadores[i].victorias = estado->victorias[i];
     }
 }

@@ -21,7 +21,9 @@ typedef struct {
     SimboloJugador tablero[BOARD_SIZE][BOARD_SIZE]; // Estado del tablero
     int jugador_actual;                       // Índice del jugador actual
     bool juego_terminado;                     // Estado del juego
-    int ganador;                              // Índice del jugador ganador
+    int ganador;			      // Índice del jugador ganador
+    int rondas_jugadas;
+    int victorias[NUM_PLAYERS];
 } EstadoJuego;
 
 // Logica principal del juego
@@ -31,6 +33,7 @@ bool hay_ganador(const EstadoJuego *estado, int fila, int columna);
 bool hay_empate(const EstadoJuego *estado);
 void siguiente_jugador(EstadoJuego *estado);
 void obtener_info_jugadores(const EstadoJuego *estado, Jugador jugadores[NUM_PLAYERS]);
+void preparar_nueva_ronda(EstadoJuego *estado);
 
 // Constantes compartidas
 extern const Simbolo simbolos_visual[];

@@ -7,58 +7,70 @@ int main(void) {
     // Inicializar estado del juego
     EstadoJuego juego;
     iniciar_juego(&juego);
-    
-    // Inicializar ventana gráfica
     ejecutar_ventana(ANCHO, ALTO);
-    
-    // Área del botón de reinicio
     dibujar_reset();
+    reiniciar_temp();
     
     // Bucle principal del juego
     while (!WindowShouldClose()) {
         // Procesar evento de reinicio o de salida
-        if (reset_check() == 1) {
+	int reset_status = reset_check();
+	if (reset_status == 1) {
             iniciar_juego(&juego);
             reiniciar_temp();
-        }
-        if (reset_check() == 0) {
-	    cerrar_ventana();
+        } else if (reset_status == 0) {
+		break; // Salir del bucle para cerrar la ventana
 	}
 
         // Solo procesar jugadas si el juego está activo
         if (!juego.juego_terminado) {
-            // Manejar temporizador
-            if (!temporizador()) {
+		// Manejar clics del ratón en el tablero
+            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+                Vector2 mousePos = GetMousePosition();
+                // Convertir posición del ratón a coordenadas del tablero
+                int columna = (mousePos.x - POS_X) / TAM_CELDA;
+                int fila = (mousePos.y - POS_Y) / TAM_CELDA;
+                
+                // Verificar que el clic fue dentro del tablero
+                if (fila >= 0 && fila < BOARD_SIZE && columna >= 0 && columna < BOARD_SIZE) {
+                    manejar_jugada(&juego, fila, columna);
+                }
+            }
+            
+            // Actualizar temporizador
+            if (temporizador() == 0) {
                 siguiente_jugador(&juego);
                 reiniciar_temp();
             }
-            
-            // Procesar clic del mouse
+        } else {
+            // Mostrar mensaje de fin de juego
+            const char* mensaje = juego.ganador != -1 ?
+                TextFormat("¡Jugador %d gana!", juego.ganador + 1) : "¡Empate!";
+            Color color = juego.ganador != -1 ? colores_jugadores[juego.ganador] : DARKGRAY;
+
+            DrawText(mensaje, (ANCHO - MeasureText(mensaje, 40))/2, ALTO/2 - 50, 40, color);
+            DrawText("Click para continuar", (ANCHO - MeasureText("Click para continuar", 20))/2, ALTO/2 + 20, 20, color);
+  
+            // Procesar clic para reiniciar
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                Vector2 mousePos = GetMousePosition();
-                int fila = (mousePos.y - POS_Y) / TAM_CELDA;
-                int columna = (mousePos.x - POS_X) / TAM_CELDA;
-                
-                if (fila >= 0 && fila < BOARD_SIZE && columna >= 0 && columna < BOARD_SIZE) {
-                    manejar_jugada(&juego, fila, columna);
-                    reiniciar_temp(); // Resetear tiempo con jugada válida
-                }
+                iniciar_juego(&juego);
+                reiniciar_temp();
             }
         }
-        
+
         // --- RENDERIZADO ---
         BeginDrawing();
             ClearBackground((Color){216, 209, 148, 255}); // Fondo amarillo pálido
             
             // Dibujar elementos visuales
             tablero();
+	    dibujar_reset();
             
             // Convertir estado para visualización
             Jugador jugadores_visual[NUM_PLAYERS];
             obtener_info_jugadores(&juego, jugadores_visual);
             victorias(jugadores_visual, NUM_PLAYERS);
             
-            dibujar_reset();
             
             // Dibujar símbolos en el tablero
             for (int i = 0; i < BOARD_SIZE; i++) {

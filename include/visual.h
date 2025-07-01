@@ -10,6 +10,7 @@
 #define ALTO 720
 #define FPS 60
 #define DURACION_TURNO 20.0f
+#define TIEMPO_MENSAJE_VICTORIA 3.0  // Segundos para mostrar el mensaje
 
 
 // Declaración de la variable global
