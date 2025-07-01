@@ -12,17 +12,19 @@ int main(void) {
     ejecutar_ventana(ANCHO, ALTO);
     
     // Área del botón de reinicio
-    Rectangle boton_reinicio;
-    dibujar_reset(&boton_reinicio);
+    dibujar_reset();
     
     // Bucle principal del juego
     while (!WindowShouldClose()) {
-        // Procesar evento de reinicio
-        if (reset_check(boton_reinicio)) {
+        // Procesar evento de reinicio o de salida
+        if (reset_check() == 1) {
             iniciar_juego(&juego);
             reiniciar_temp();
         }
-        
+        if (reset_check() == 0) {
+	    cerrar_ventana();
+	}
+
         // Solo procesar jugadas si el juego está activo
         if (!juego.juego_terminado) {
             // Manejar temporizador
@@ -56,7 +58,7 @@ int main(void) {
             obtener_info_jugadores(&juego, jugadores_visual);
             victorias(jugadores_visual, NUM_PLAYERS);
             
-            dibujar_reset(&boton_reinicio);
+            dibujar_reset();
             
             // Dibujar símbolos en el tablero
             for (int i = 0; i < BOARD_SIZE; i++) {

@@ -100,7 +100,7 @@ int temporizador() {
 			tiempo_restante = 0.0f;
 		}
 	}
-	DrawText(TextFormat("Tiempo: %d", (int)tiempo_restante), 20, 20, 30, DARKGRAY);
+	DrawText(TextFormat("Tiempo: %d", (int)tiempo_restante), 20, (720 - 30) / 2, 30, DARKGRAY);
 	return (tiempo_restante > 0.0f);
 }
 
@@ -147,29 +147,27 @@ void victorias(const Jugador jugadores[], int cantidad_jugadores) {
 //------------------------------------------------------Dibujar Botón de Reinicio---------------------------------------------------
 #define LIGHTGREEN (Color){202, 230, 137, 255}
 
-void dibujar_reset(Rectangle *area) {
-	const int ancho = 130;
-	const int alto = 40;
-	const int margen = 20;
+void dibujar_reset() {
+	const int margen = 40;
+	const int fontSize = 20;
 
-	area->x = margen;
-	area->y = 720 - alto - margen;
-	area->width = ancho;
-	area->height = alto;
+	const char *texto1 = "Presiona R para reiniciar";
+	const char *texto2 = "Presiona Esc para salir";
+	
+	int x = margen;
+	int y1 = 720 - (2 * fontSize) - margen;
+	int y2 = 720 - fontSize - margen / 2;
 
-	DrawRectangleRec(*area, LIGHTGREEN);
-	DrawRectangleLinesEx(*area, 2, DARKGREEN);
-
-	const char *texto = "Reiniciar";
-	int textWidth = MeasureText(texto, 20);
-	int texto_x = area->x + (ancho - textWidth) / 2;
-	int texto_y = area->y + (alto - 20) / 2;
-
-	DrawText(texto, texto_x, texto_y, 20, BLACK);
+	DrawText(texto1, x, y1, fontSize, BLACK);
+	DrawText(texto2, x, y2, fontSize, BLACK);
 }	
 //-----------------------------------------------------------Presionar reset-------------------------------------------------------
-int reset_check(Rectangle boton) {
-	Vector2 pos_mouse = GetMousePosition();
-	return CheckCollisionPointRec(pos_mouse, boton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+int reset_check() {
+	if (IsKeyPressed(KEY_R)) {
+		return 1;
+	} if (IsKeyPressed(KEY_ESCAPE)) {
+		return 0;
+	}
+	return -1;
 }
 
