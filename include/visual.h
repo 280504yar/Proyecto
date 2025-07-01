@@ -1,8 +1,19 @@
 #ifndef VISUAL_H
 #define VISUAL_H
-
-//Biblioteca a utilizar
 #include "raylib.h"
+
+// Constantes compartidas
+#define TAM_CELDA 80
+#define POS_X 560
+#define POS_Y 0
+#define ANCHO 1280
+#define ALTO 720
+#define FPS 60
+#define DURACION_TURNO 20.0f
+
+
+// Declaración de la variable global
+extern float tiempo_restante;
 
 //Structs para facilitar la información
 typedef enum {
@@ -27,7 +38,7 @@ int temporizador();                                                 // Inicia el
 void reiniciar_temp();                                                     // Reinicio simple del temporizador
 void victorias(const Jugador jugadores[], int cantidad_jugadores);         // Cuenta y dibuja las victorias de cada jugador
 void dibujar_reset(Rectangle *area);                                       // Dibuja el botón de reinicio en un área
-int reset_check(Rectangle *area);                                          // Retorna 1 si se presionó reniciar, 0 si no
+int reset_check(Rectangle boton);                                          // Retorna 1 si se presionó reniciar, 0 si no
 									   
 #endif
 

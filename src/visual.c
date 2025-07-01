@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <time.h>
 
+// Definición de la variable global
+float tiempo_restante = DURACION_TURNO;
+
 //Constantes de posición, tamaño y tiempo del programa
 #define TAM_CELDA 80
 #define POS_X 560
@@ -10,13 +13,11 @@
 #define ALTO 720
 #define FPS 60
 #define DURACION_TURNO 20.0f
-static float tiempo_restante = DURACION_TURNO;
 
 //------------------------------------------------------------Ejecutar Ventana----------------------------------------------------
 void ejecutar_ventana(int ancho, int alto) {
 	InitWindow(ancho, alto, "Gato 9x9");
 	SetTargetFPS(FPS);
-	Color background = {216, 209, 148, 255}; //Color escogido para mejor visualización del juego (Amarillo Pálido)
 }
 //------------------------------------------------------------Cerrar Ventana-----------------------------------------------------
 void cerrar_ventana() {
@@ -169,10 +170,6 @@ void dibujar_reset(Rectangle *area) {
 //-----------------------------------------------------------Presionar reset-------------------------------------------------------
 int reset_check(Rectangle boton) {
 	Vector2 pos_mouse = GetMousePosition();
-
-	if (CheckCollisionPointRec(pos_mouse, boton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-		return 1;
-	}
-	return 0;
+	return CheckCollisionPointRec(pos_mouse, boton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 }
 

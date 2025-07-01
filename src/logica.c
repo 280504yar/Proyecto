@@ -1,9 +1,9 @@
 #include "logica.h"
-#include "visual.h" // Para Simbolo y Color
+#include "visual.h"
 #include <stdbool.h>
 
 // Mapeo entre SimboloJugador y Simbolo
-static const Simbolo simbolos_visual[JUGADORES] = {
+const Simbolo simbolos_visual[NUM_PLAYERS] = {
     SIM_X,       // JUGADOR_X
     SIM_CIRCULO, // JUGADOR_O
     SIM_TRIANGULO, // JUGADOR_TRIANGULO
@@ -11,7 +11,7 @@ static const Simbolo simbolos_visual[JUGADORES] = {
 };
 
 // Colores para cada jugador
-static const Color colores_jugadores[JUGADORES] = {
+const Color colores_jugadores[NUM_PLAYERS] = {
     RED,    // JUGADOR_X
     BLUE,   // JUGADOR_O
     GREEN,  // JUGADOR_TRIANGULO
@@ -21,8 +21,8 @@ static const Color colores_jugadores[JUGADORES] = {
 // Iniciando el juego
 void iniciar_juego(EstadoJuego *estado) {
     // Limpiar tablero
-    for (int i = 0; i < FILAS; i++) {
-        for (int j = 0; j < COLUMNAS; j++) {
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        for (int j = 0; j < BOARD_SIZE; j++) {
             estado->tablero[i][j] = VACIO;
         }
     }
@@ -35,7 +35,7 @@ void iniciar_juego(EstadoJuego *estado) {
 // Maneja una jugada en la posición (fila, columna)
 void manejar_jugada(EstadoJuego *estado, int fila, int columna) {
     // Validar posición
-    if (fila < 0 || fila >= FILAS || columna < 0 || columna >= COLUMNAS) return;
+    if (fila < 0 || fila >= BOARD_SIZE || columna < 0 || columna >= BOARD_SIZE) return;
     
     // Reglas para validar jugada (si el espacio esta vacio y el juego no esta terminado)
     if (estado->tablero[fila][columna] == VACIO && !estado->juego_terminado) {
@@ -74,7 +74,7 @@ bool hay_ganador(const EstadoJuego *estado, int fila, int columna) {
             int r = fila + i * direcciones[d][0];
             int c = columna + i * direcciones[d][1];
             
-            if (r >= 0 && r < FILAS && c >= 0 && c < COLUMNAS && 
+            if (r >= 0 && r < BOARD_SIZE && c >= 0 && c < BOARD_SIZE && 
                 estado->tablero[r][c] == actual) {
                 contador++;
             } else break;
@@ -85,7 +85,7 @@ bool hay_ganador(const EstadoJuego *estado, int fila, int columna) {
             int r = fila - i * direcciones[d][0];
             int c = columna - i * direcciones[d][1];
             
-            if (r >= 0 && r < FILAS && c >= 0 && c < COLUMNAS && 
+            if (r >= 0 && r < BOARD_SIZE && c >= 0 && c < BOARD_SIZE && 
                 estado->tablero[r][c] == actual) {
                 contador++;
             } else break;
@@ -100,8 +100,8 @@ bool hay_ganador(const EstadoJuego *estado, int fila, int columna) {
 
 // Verifica si el juego terminó en empate
 bool hay_empate(const EstadoJuego *estado) {
-    for (int i = 0; i < FILAS; i++) {
-        for (int j = 0; j < COLUMNAS; j++) {
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        for (int j = 0; j < BOARD_SIZE; j++) {
             if (estado->tablero[i][j] == VACIO) {
                 return false;
             }
@@ -112,12 +112,12 @@ bool hay_empate(const EstadoJuego *estado) {
 
 // Cambia al siguiente jugador
 void siguiente_jugador(EstadoJuego *estado) {
-    estado->jugador_actual = (estado->jugador_actual + 1) % JUGADORES;
+    estado->jugador_actual = (estado->jugador_actual + 1) % NUM_PLAYERS;
 }
 
 // Función de compatibilidad 
-void obtener_info_jugadores(const EstadoJuego *estado, Jugador jugadores[JUGADORES]) {
-    for (int i = 0; i < JUGADORES; i++) {
+void obtener_info_jugadores(const EstadoJuego *estado, Jugador jugadores[NUM_PLAYERS]) {
+    for (int i = 0; i < NUM_PLAYERS; i++) {
         jugadores[i].simbolo = simbolos_visual[i];
         jugadores[i].color = colores_jugadores[i];
         jugadores[i].victorias = (estado->ganador == i) ? 1 : 0;

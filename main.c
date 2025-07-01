@@ -1,4 +1,3 @@
-// main.c
 #include "visual.h"
 #include "logica.h"
 #include <stdio.h>
@@ -38,7 +37,7 @@ int main(void) {
                 int fila = (mousePos.y - POS_Y) / TAM_CELDA;
                 int columna = (mousePos.x - POS_X) / TAM_CELDA;
                 
-                if (fila >= 0 && fila < FILAS && columna >= 0 && columna < COLUMNAS) {
+                if (fila >= 0 && fila < BOARD_SIZE && columna >= 0 && columna < BOARD_SIZE) {
                     manejar_jugada(&juego, fila, columna);
                     reiniciar_temp(); // Resetear tiempo con jugada válida
                 }
@@ -53,15 +52,15 @@ int main(void) {
             tablero();
             
             // Convertir estado para visualización
-            Jugador jugadores_visual[JUGADORES];
+            Jugador jugadores_visual[NUM_PLAYERS];
             obtener_info_jugadores(&juego, jugadores_visual);
-            victorias(jugadores_visual, JUGADORES);
+            victorias(jugadores_visual, NUM_PLAYERS);
             
             dibujar_reset(&boton_reinicio);
             
             // Dibujar símbolos en el tablero
-            for (int i = 0; i < FILAS; i++) {
-                for (int j = 0; j < COLUMNAS; j++) {
+            for (int i = 0; i < BOARD_SIZE; i++) {
+                for (int j = 0; j < BOARD_SIZE; j++) {
                     if (juego.tablero[i][j] != VACIO) {
                         Simbolo simbolo = simbolos_visual[juego.tablero[i][j]];
                         Color color = colores_jugadores[juego.tablero[i][j]];
